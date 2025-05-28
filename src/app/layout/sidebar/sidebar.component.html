@@ -1,0 +1,23 @@
+
+<mat-sidenav-container>
+    <mat-sidenav mode="side" opened [style.width]="'250px'">
+       <div class="sidenav-header">
+            <img src="https://archive.smashing.media/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/68dd54ca-60cf-4ef7-898b-26d7cbe48ec7/10-dithering-opt.jpg" width="100" height="100">
+       </div>
+       <div class="header-text">
+        <h2 style="text-align: center;">Your Channel</h2>
+        <p style="text-align: center;">priya singh</p>
+       </div>
+       <mat-nav-list>
+        <a mat-list-item *ngFor="let i of menuItem()"[routerLink]="i.routes">
+            <mat-icon matListItemIcon>{{i.icon}}</mat-icon>
+            <span matListItemTitle routerLink="'i.routes'">{{i.label}}</span>
+        </a>
+        
+       </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="content">
+<router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
