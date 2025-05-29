@@ -1,0 +1,230 @@
+<div class="example-container" tabindex="0">
+    @if(isLoading){
+    <!-- <app-table-skeleton [displayedColumns]="dynamicColumns"></app-table-skeleton> -->
+    }@else {
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      multiTemplateDataRows
+      class="expandable-rows"
+    >
+      <!-- Expanded Row And COl -->
+      <ng-container *ngIf="isExpandable" matColumnDef="isExpand" sticky>
+        <th mat-header-cell *matHeaderCellDef>{{ " " }}</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <button
+            mat-icon-button
+            aria-label="expand row"
+            (click)="toggleExpand(element, $event)"
+          >
+            <mat-icon *ngIf="expandedElement === element">remove</mat-icon>
+            <mat-icon *ngIf="expandedElement !== element">add</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select" sticky>
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            [checked]="isAllSelected()"
+            (change)="toggleSelectAll($event)"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox
+            [(ngModel)]="element.selected"
+            (change)="onSelectionChange(element)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+  
+      <!-- Index Column (#) -->
+      <ng-container matColumnDef="index" sticky>
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td class="padding" mat-cell *matCellDef="let element; let i = index">
+          {{ element?.index }}
+        </td>
+      </ng-container>
+  
+      <!-- Dynamic Columns -->
+      <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ column | titlecase }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="column === 'Agent Details'; else defaultContent">
+            <div [innerHTML]="element[column]"></div>
+          </ng-container>
+          <ng-template #defaultContent>
+            {{ element[column] }}
+          </ng-template>
+        </td>
+      </ng-container>
+  
+      <!-- First Attachment Column -->
+      <ng-container matColumnDef="attachedFile">
+        <th mat-header-cell *matHeaderCellDef>{{ attachmentColumnName }}</th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container
+            *ngIf="element?.attachedFile !== 'N/A'; else noFileTemplate"
+          >
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="handleAttachedFile(element.attachedFile)"
+            >
+              {{ attachmentColumnName === "Credit File" ? "Download" : "Link" }}
+            </button>
+          </ng-container>
+          <ng-template #noFileTemplate>
+            <button mat-button>N/A</button>
+          </ng-template>
+        </td>
+      </ng-container>
+  
+      <!-- Second Attachment Column -->
+      <ng-container matColumnDef="secondAttachedFile">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ secondAttachmentColumnName }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container
+            *ngIf="element?.secondAttachedFile !== 'N/A'; else noFileTemplate2"
+          >
+            <button
+              mat-button
+              class="link"
+              (click)="handleAttachedFile(element.secondAttachedFile)"
+            >
+              Link
+            </button>
+          </ng-container>
+          <ng-template #noFileTemplate2>
+            <button mat-button>N/A</button>
+          </ng-template>
+        </td>
+      </ng-container>
+  
+      <!-- Action Column -->
+      @if(showActions){
+      <ng-container matColumnDef="action" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="">
+            <button
+              (click)="dotHandler(element)"
+              mat-icon-button
+              [matMenuTriggerFor]="menuWithIcons"
+              aria-label="icon-button with a menu"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menuWithIcons="matMenu">
+              <button
+                (click)="onActionClick(action, element)"
+                *ngFor="let action of actions"
+                mat-menu-item
+              >
+                {{ action }}
+              </button>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+      }
+  
+      <ng-container
+        style="display: none !important; visibility: hidden !important"
+        matColumnDef="expand"
+      >
+        <th
+          style="display: none !important; visibility: hidden !important"
+          mat-header-cell
+          *matHeaderCellDef
+          aria-label="row actions"
+        >
+          &nbsp;
+        </th>
+        <td
+          style="display: none !important; visibility: hidden !important"
+          mat-cell
+          *matCellDef="let element"
+        >
+          <button
+            mat-icon-button
+            aria-label="expand row"
+            (click)="
+              expandedElement = expandedElement === element ? null : element;
+              $event.stopPropagation()
+            "
+          >
+            @if (expandedElement === element) {
+            <mat-icon>keyboard_arrow_up</mat-icon>
+            } @else {
+            <mat-icon>keyboard_arrow_down</mat-icon>
+            }
+          </button>
+        </td>
+      </ng-container>
+  
+      <ng-container class="expansion-panel" matColumnDef="expandedDetail">
+        <td
+          class="expansion__panel-padding-header"
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="columnsToDisplay.length"
+        >
+          <div
+            class="example-element-detail"
+            [@detailExpand]="
+              element === expandedElement ? 'expanded' : 'collapsed'
+            "
+          >
+            <!-- Expanded Content -->
+            <ng-container *ngIf="isExpandable && expandedTemplate">
+              <ng-container
+                *ngTemplateOutlet="
+                  expandedTemplate;
+                  context: { $implicit: element }
+                "
+              ></ng-container>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+  
+      <tr mat-row *matRowDef="let element; columns: columnsToDisplay"></tr>
+  
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  
+      <tr
+        mat-row
+        *matRowDef="let element; columns: columnsToDisplayWithExpand"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']"></tr>
+      <tr sticky class="mat-row" *matNoDataRow>
+        <ng-container>
+          <td style="position: absolute" class="mat-cell" colspan="4">
+            Looks like there's nothing here right now.
+          </td>
+          <td class="mat-cell" style="visibility: hidden" colspan="4">
+            Looks like there's nothing here right now.
+          </td>
+        </ng-container>
+      </tr>
+    </table>
+    }
+  </div>
+  <mat-paginator
+    [length]="totalCount"
+    [pageSize]="globalPageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPaginatorChange($event)"
+    showFirstLastButtons
+  >
+  </mat-paginator>
+  
