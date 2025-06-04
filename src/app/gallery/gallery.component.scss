@@ -1,0 +1,105 @@
+.container {
+  position: relative;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100vh !important;
+  z-index: 5;
+}
+mat-card {
+  cursor: pointer;
+}
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: .3s ease;
+  transition: .3s ease;
+}
+
+
+.container:hover .overlay {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.text {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+::ng-deep .full-screen-modal {
+ padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+
+}
+
+
+.yellow-bg {
+  background-color: rgb(222, 222, 72) !important;
+    width: 100% !important;
+  height: 100% !important;
+
+}
+.orange-bg {
+  background-color: orange !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.red-bg {
+  background-color: red !important;
+    width: 100% !important;
+  height: 100% !important;
+
+}
+
+.purple-bg {
+  background-color: purple !important;
+    width: 100% !important;
+  height: 100% !important;
+
+}
+
+.yellow-bg {
+  background-color: rgb(222, 222, 72) !important;
+    width: 100% !important;
+  height: 100% !important;
+
+}
+.full-center {
+  display: flex !important;
+  justify-content: center  !important;
+  align-items: center !important;
+  height: 100vh !important; 
+}
+
+.head {
+  color: white !important;
+  font-size: 200px !important;
+  margin: 0 !important;
+}
+img{
+  z-index: 1;
+  position: absolute;
+}
+  
