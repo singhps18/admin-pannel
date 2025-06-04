@@ -18,7 +18,7 @@ export class ApiserviceService {
     name: 'Apple',
     juice: 'Apple Juice',
     flavor: 'Mint Flavor',
-    image: 'https://github.com/singhps18/admin-pannel/blob/main/src/assets/pngtree-imported-wine-bottle-image_1246181-removebg-preview.png'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNLOwiUYUR8gcGNQuCiLYUKFv9sfExczDK1g&s'
   },
   {
     sr: 3,
